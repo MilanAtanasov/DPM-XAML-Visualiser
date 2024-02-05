@@ -33,8 +33,9 @@ namespace DPM_XAML_Visualiser
 
             // Set the source path to the selected file
             source.SourcePath = fileSelectionDialog(sender, e);
-            
+            source.updateDirectoryStructure();
 
+            source.debug();
 
 
         }
@@ -62,6 +63,40 @@ namespace DPM_XAML_Visualiser
             }
             return path;
         }
+
+        private void LoadDirectoryStructure()
+        {
+            // Assuming you have a method to load or parse your directory structure
+            var rootDirectory = new Directory("Root Directory Name");
+            // Populate the rootDirectory with its files and subdirectories here...
+
+            // Bind the rootDirectory to the TreeView
+            DirectoryTreeView.Items.Add(CreateTreeViewItem(rootDirectory));
+        }
+
+        private TreeViewItem CreateTreeViewItem(object item)
+        {
+            var treeViewItem = new TreeViewItem { Header = item.ToString() };
+
+            if (item is Directory dir)
+            {
+                foreach (var child in dir.Children)
+                {
+                    treeViewItem.Items.Add(CreateTreeViewItem(child));
+                }
+            }
+
+            // Optionally, handle selection changed or other events here
+
+            return treeViewItem;
+        }
+
+        private void DirectoryTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            var selectedItem = e.NewValue as TreeViewItem;
+            // Implement your interaction logic here, e.g., update a details view or open a file
+        }
+
 
     }
 }
